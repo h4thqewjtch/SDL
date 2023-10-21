@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1023</width>
+    <height>698</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <layout class="QGridLayout" name="mainGrid">
+      <item row="4" column="0" colspan="3">
+       <layout class="QGridLayout" name="readGrid">
+        <item row="0" column="0">
+         <widget class="QTextBrowser" name="textBrowser">
+          <property name="styleSheet">
+           <string notr="true"/>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="0" column="0" colspan="3">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QComboBox" name="comboFonts">
+        <item>
+         <property name="text">
+          <string>Arial</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Calibri</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Courier New</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Impact</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Malgun Gothic</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Monotype Corsiva</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Source Code Pro</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Times New Roman</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QPushButton" name="addToFavorites">
+        <property name="text">
+         <string>Add to Favorites</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0" colspan="2">
+       <widget class="QLabel" name="bookInfo">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" colspan="3">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="2">
+       <widget class="QPushButton" name="addBookmark">
+        <property name="text">
+         <string>Add Bookmark</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="comboSize">
+        <item>
+         <property name="text">
+          <string>8</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>12</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>16</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>20</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>24</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>28</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>32</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>36</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>40</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1023</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuInfo">
+    <property name="title">
+     <string>Options</string>
+    </property>
+    <addaction name="actionSelect_text"/>
+    <addaction name="actionAlready_Read"/>
+    <addaction name="actionFavorites"/>
+    <addaction name="actionBookMarks"/>
+    <addaction name="actionInfo"/>
+   </widget>
+   <addaction name="menuInfo"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionSelect_text">
+   <property name="text">
+    <string>Select text</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionAlready_Read">
+   <property name="text">
+    <string>Already Read</string>
+   </property>
+  </action>
+  <action name="actionFavorites">
+   <property name="text">
+    <string>Favorites</string>
+   </property>
+  </action>
+  <action name="actionBookMarks">
+   <property name="text">
+    <string>BookMarks</string>
+   </property>
+  </action>
+  <action name="actionInfo">
+   <property name="text">
+    <string>Info</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

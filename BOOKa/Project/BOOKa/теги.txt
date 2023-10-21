@@ -1,0 +1,16 @@
+FictionBook;description;title-info;genre;author;first-name;middle-name;last-name;book-title;annotation;p;date;coverpage;image;lang;document-info;program-used;id;version;
+body;section;title;strong;empty-line;subtitle;table;tr;td;sub;sup;emphasis;binary;a;src-lang;nickname;email;history;publish-info;book-name;publisher;city;year;div
+
+
+FictionBook;
+description;
+author;first-name;last-name;book-title;annotation;
+date;lang;src-lang;nickname;email;
+p;
+title-info;genre;a;document-info;program-used;id;version;history;publish-info;book-name;publisher;city;year;
+body;div;
+empty-line;
+title;section;middle-name;coverpage;image;strong;subtitle;
+table;tr;td;
+sub;sup;emphasis;
+binary
