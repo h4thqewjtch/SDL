@@ -1,4 +1,0 @@
-2|Arial|8|3430
-2|Arial|8|3430
-4|Arial|8|3430
-4|Malgun Gothic|28|1715
