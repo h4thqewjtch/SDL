@@ -30,7 +30,7 @@ class Ui_MainWindow
 {
 public:
     QAction *actionSelect_text;
-    QAction *actionAlready_Read;
+    QAction *actionRecent_Books;
     QAction *actionFavorites;
     QAction *actionBookMarks;
     QAction *actionInfo;
@@ -38,14 +38,17 @@ public:
     QVBoxLayout *verticalLayout;
     QGridLayout *mainGrid;
     QGridLayout *readGrid;
+    QPushButton *btnBack;
+    QPushButton *btnNext;
     QTextBrowser *textBrowser;
     QLabel *label_3;
     QComboBox *comboFonts;
     QPushButton *addToFavorites;
-    QLabel *bookInfo;
     QLabel *label;
     QPushButton *addBookmark;
     QComboBox *comboSize;
+    QWidget *widget;
+    QLabel *bookInfo;
     QMenuBar *menubar;
     QMenu *menuInfo;
     QStatusBar *statusbar;
@@ -57,8 +60,8 @@ public:
         MainWindow->resize(1023, 698);
         actionSelect_text = new QAction(MainWindow);
         actionSelect_text->setObjectName("actionSelect_text");
-        actionAlready_Read = new QAction(MainWindow);
-        actionAlready_Read->setObjectName("actionAlready_Read");
+        actionRecent_Books = new QAction(MainWindow);
+        actionRecent_Books->setObjectName("actionRecent_Books");
         actionFavorites = new QAction(MainWindow);
         actionFavorites->setObjectName("actionFavorites");
         actionBookMarks = new QAction(MainWindow);
@@ -73,11 +76,21 @@ public:
         mainGrid->setObjectName("mainGrid");
         readGrid = new QGridLayout();
         readGrid->setObjectName("readGrid");
+        btnBack = new QPushButton(centralwidget);
+        btnBack->setObjectName("btnBack");
+
+        readGrid->addWidget(btnBack, 1, 0, 1, 1);
+
+        btnNext = new QPushButton(centralwidget);
+        btnNext->setObjectName("btnNext");
+
+        readGrid->addWidget(btnNext, 1, 1, 1, 1);
+
         textBrowser = new QTextBrowser(centralwidget);
         textBrowser->setObjectName("textBrowser");
         textBrowser->setStyleSheet(QString::fromUtf8(""));
 
-        readGrid->addWidget(textBrowser, 0, 0, 1, 1);
+        readGrid->addWidget(textBrowser, 0, 0, 1, 2);
 
 
         mainGrid->addLayout(readGrid, 4, 0, 1, 3);
@@ -105,11 +118,6 @@ public:
 
         mainGrid->addWidget(addToFavorites, 1, 2, 1, 1);
 
-        bookInfo = new QLabel(centralwidget);
-        bookInfo->setObjectName("bookInfo");
-
-        mainGrid->addWidget(bookInfo, 3, 0, 1, 2);
-
         label = new QLabel(centralwidget);
         label->setObjectName("label");
 
@@ -134,6 +142,14 @@ public:
 
         mainGrid->addWidget(comboSize, 1, 1, 1, 1);
 
+        widget = new QWidget(centralwidget);
+        widget->setObjectName("widget");
+        bookInfo = new QLabel(widget);
+        bookInfo->setObjectName("bookInfo");
+        bookInfo->setGeometry(QRect(8, 0, 661, 20));
+
+        mainGrid->addWidget(widget, 3, 0, 1, 2);
+
 
         verticalLayout->addLayout(mainGrid);
 
@@ -150,7 +166,7 @@ public:
 
         menubar->addAction(menuInfo->menuAction());
         menuInfo->addAction(actionSelect_text);
-        menuInfo->addAction(actionAlready_Read);
+        menuInfo->addAction(actionRecent_Books);
         menuInfo->addAction(actionFavorites);
         menuInfo->addAction(actionBookMarks);
         menuInfo->addAction(actionInfo);
@@ -167,13 +183,15 @@ public:
 #if QT_CONFIG(shortcut)
         actionSelect_text->setShortcut(QCoreApplication::translate("MainWindow", "Ctrl+N", nullptr));
 #endif // QT_CONFIG(shortcut)
-        actionAlready_Read->setText(QCoreApplication::translate("MainWindow", "Already Read", nullptr));
+        actionRecent_Books->setText(QCoreApplication::translate("MainWindow", "Recent Books", nullptr));
         actionFavorites->setText(QCoreApplication::translate("MainWindow", "Favorites", nullptr));
         actionBookMarks->setText(QCoreApplication::translate("MainWindow", "BookMarks", nullptr));
         actionInfo->setText(QCoreApplication::translate("MainWindow", "Info", nullptr));
 #if QT_CONFIG(shortcut)
         actionInfo->setShortcut(QCoreApplication::translate("MainWindow", "Ctrl+I", nullptr));
 #endif // QT_CONFIG(shortcut)
+        btnBack->setText(QCoreApplication::translate("MainWindow", "Back", nullptr));
+        btnNext->setText(QCoreApplication::translate("MainWindow", "Next", nullptr));
         label_3->setText(QString());
         comboFonts->setItemText(0, QCoreApplication::translate("MainWindow", "Arial", nullptr));
         comboFonts->setItemText(1, QCoreApplication::translate("MainWindow", "Calibri", nullptr));
@@ -185,7 +203,6 @@ public:
         comboFonts->setItemText(7, QCoreApplication::translate("MainWindow", "Times New Roman", nullptr));
 
         addToFavorites->setText(QCoreApplication::translate("MainWindow", "Add to Favorites", nullptr));
-        bookInfo->setText(QString());
         label->setText(QString());
         addBookmark->setText(QCoreApplication::translate("MainWindow", "Add Bookmark", nullptr));
         comboSize->setItemText(0, QCoreApplication::translate("MainWindow", "8", nullptr));
@@ -198,6 +215,7 @@ public:
         comboSize->setItemText(7, QCoreApplication::translate("MainWindow", "36", nullptr));
         comboSize->setItemText(8, QCoreApplication::translate("MainWindow", "40", nullptr));
 
+        bookInfo->setText(QString());
         menuInfo->setTitle(QCoreApplication::translate("MainWindow", "Options", nullptr));
     } // retranslateUi
 

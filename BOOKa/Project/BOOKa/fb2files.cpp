@@ -5,19 +5,15 @@
 
 FB2Files::FB2Files(QObject *parent) : QObject{parent}{}
 
-bool FB2Files::openFB2File(QFile &file, QString *text, QString fontName, int fontSize)
+bool FB2Files::openFB2File(QFile &file, QString &text, QString fontName, int fontSize)
 {
-    text->clear();
+    text.clear();
     QString special;
     QString description; // описание
-    if( QSysInfo::productType() == "android")
-    {
-        fontSize *= 1.8;
-    }
     QXmlStreamReader streamReader(&file);
+    QString opt;
     QString rId;
     QString rType;
-    QString opt;
     QStringList thisToken;
     QStringList content;
     while(!streamReader.atEnd())
@@ -26,13 +22,13 @@ bool FB2Files::openFB2File(QFile &file, QString *text, QString fontName, int fon
         {
         case QXmlStreamReader::StartDocument:
         {
-            text->append("<!DOCTYPE HTML><html><body style=\"font-size:%1px; font-family:Sans, ").append(fontName).append(";\">");
-            *text = text->arg(fontSize);
+            text.append("<!DOCTYPE HTML><html><body style=\"font-size:%1px; font-family:Sans, ").append(fontName).append(";\">");
+            text = text.arg(fontSize);
             break;
         }
         case QXmlStreamReader::EndDocument:
         {
-            text->append("</body></html>");
+            text.append("</body></html>");
             break;
         }
         case QXmlStreamReader::StartElement:
@@ -76,64 +72,12 @@ bool FB2Files::openFB2File(QFile &file, QString *text, QString fontName, int fon
             if(streamReader.name().toString() == "p"
                 || streamReader.name().toString() == "subtitle")
             {
-                text->append("<p"+opt +" >");
-                break;
-            }
-            if( streamReader.name().toString() == "table" )
-            {
-                QString table;
-                for(int i = 0; i < streamReader.attributes().count(); i++)
-                {
-                    if(!streamReader.attributes().at(i).name().compare("style"))
-                    {
-                        table.append( "style=\"" +streamReader.attributes().at(i).value().toString()+ ";\"" );
-                    }
-                }
-                text->append("<table border=1 align=\"center\" style=\"border:solid;\" " + table + ">");
-                break;
-            }
-            if( streamReader.name().toString() == "tr" )
-            {
-                QString table;
-                for(int i = 0; i < streamReader.attributes().count(); i++)
-                {
-                    if(!streamReader.attributes().at(i).name().compare("aling"))
-                    {
-                        table.append( "aling=\"" +streamReader.attributes().at(i).value().toString()+ "\"" );
-                    }
-                }
-                text->append("<tr " + table + ">");
-                break;
-            }
-            if( streamReader.name().toString() == "td"
-                || streamReader.name().toString() == "th" )
-            {
-                QString table;
-                for(int i = 0; i < streamReader.attributes().count(); i++)
-                {
-                    if(!streamReader.attributes().at(i).name().compare("aling"))
-                    {
-                        table.append( "aling=\"" +streamReader.attributes().at(i).value().toString()+ "\" " );
-                    }
-                    else if(!streamReader.attributes().at(i).name().compare("valing"))
-                    {
-                        table.append( "valing=\"" +streamReader.attributes().at(i).value().toString()+ "\" " );
-                    }
-                    else if(!streamReader.attributes().at(i).name().compare("colspan"))
-                    {
-                        table.append( "colspan=" +streamReader.attributes().at(i).value().toString()+ " " );
-                    }
-                    else if(!streamReader.attributes().at(i).name().compare("rowspan"))
-                    {
-                        table.append( "rowspan=" +streamReader.attributes().at(i).value().toString()+ " " );
-                    }
-                }
-                text->append( "<"+streamReader.name().toString()+ " " + table +">" );
+                text.append("<p"+opt +" >");
                 break;
             }
             if( streamReader.name().toString() == "empty-line" )
             {
-                text->append("<br/>");
+                text.append("<br/>");
                 break;
             }
             if(streamReader.name().toString() == "strong"
@@ -142,22 +86,22 @@ bool FB2Files::openFB2File(QFile &file, QString *text, QString fontName, int fon
                 || streamReader.name().toString() == "code"
                 || streamReader.name().toString() == "cite")
             {
-                text->append( "<" + streamReader.name().toString() + ">");
+                text.append( "<" + streamReader.name().toString() + ">");
                 break;
             }
             if(streamReader.name().toString() == "emphasis")
             {
-                text->append( "<i>" );
+                text.append( "<i>" );
                 break;
             }
             if( streamReader.name().toString() == "v" )
             {
-                text->append("<p align=\"left\" style=\"margin-left:25px;\">");
+                text.append("<p align=\"left\" style=\"margin-left:25px;\">");
                 break;
             }
             if(streamReader.name().toString() == "strikethrough")
             {
-                text->append( "<strike>" );
+                text.append( "<strike>" );
                 break;
             }
 
@@ -171,19 +115,19 @@ bool FB2Files::openFB2File(QFile &file, QString *text, QString fontName, int fon
                         rId = streamReader.attributes().at(i).value().toString();
                     }
                 }
-                text->append("<a href=\"" + rId + "\"> ");
+                text.append("<a href=\"" + rId + "\"> ");
             }
-            if(streamReader.name().toString() == "text-author" ) // автор текстта
-            {
-                text->append( "<p align=\"justify\" style=\"margin-left:45px;\">" );
-                break;
-            }
+//            if(streamReader.name().toString() == "text-author" ) // автор текстта
+//            {
+//                text.append( "<p align=\"justify\" style=\"margin-left:45px;\">" );
+//                break;
+//            }
 
-            if(streamReader.name().toString() == "date" ) // автор текстта
-            {
-                text->append( "<p align=\"justify\" style=\"margin-left:45px;\">" );
-                break;
-            }
+//            if(streamReader.name().toString() == "date" ) // автор текстта
+//            {
+//                text.append( "<p align=\"justify\" style=\"margin-left:45px;\">" );
+//                break;
+//            }
             break;
         }
         case QXmlStreamReader::EndElement:
@@ -195,39 +139,35 @@ bool FB2Files::openFB2File(QFile &file, QString *text, QString fontName, int fon
             if( streamReader.name().toString() == "p"
                 || streamReader.name().toString() == "subtitle"
                 || streamReader.name().toString() == "v"
-                || streamReader.name().toString() == "date"
-                || streamReader.name().toString() == "text-author")
+               /* || streamReader.name().toString() == "date"
+                || streamReader.name().toString() == "text-author"*/)
             {
-                text->append("</p>");
+                text.append("</p>");
                 break;
             }
-            if(streamReader.name().toString() == "td"
-                || streamReader.name().toString() == "th"
-                || streamReader.name().toString() == "tr"
-                || streamReader.name().toString() == "table"
-                || streamReader.name().toString() == "sup"
+            if( streamReader.name().toString() == "sup"
                 || streamReader.name().toString() == "sub"
                 || streamReader.name().toString() == "strong"
                 || streamReader.name().toString() == "code"
                 || streamReader.name().toString() == "cite")
             {
-                text->append( "</"+streamReader.name().toString()+">" );
+                text.append( "</"+streamReader.name().toString()+">" );
                 break;
             }
             if( streamReader.name().toString() == "a" )
             {
                 rId.remove("#");
-                text->append( "</a><span id=\"" + rId + "___" + "\"></span>" );
+                text.append( "</a><span id=\"" + rId + "___" + "\"></span>" );
                 break;
             }
             if(streamReader.name().toString() == "emphasis")
             {
-                text->append( "</i>" );
+                text.append( "</i>" );
                 break;
             }
             if(streamReader.name().toString() == "strikethrough")
             {
-                text->append( "</strike>" );
+                text.append( "</strike>" );
                 break;
             }
             if(special == "notes") // режим извлечения примечаний
@@ -235,10 +175,6 @@ bool FB2Files::openFB2File(QFile &file, QString *text, QString fontName, int fon
                 if( streamReader.name().toString() == "body" )
                 {
                     special = "";
-                }
-                if( streamReader.name().toString() == "section" )
-                {
-                    text->insert(text->lastIndexOf("<"), "<a href=\"#" + rId + "___" + "\"> см. текст</a>");
                 }
             }
             break;
@@ -256,7 +192,7 @@ bool FB2Files::openFB2File(QFile &file, QString *text, QString fontName, int fon
                                 + rType +";base64,"
                                 + streamReader.text().toString()
                                 + "\"/>";
-                text->replace("#"+rId +"#", image);
+                text.replace("#"+rId +"#", image);
                 rId = "";
                 rType = "";
                 break;
@@ -286,23 +222,22 @@ bool FB2Files::openFB2File(QFile &file, QString *text, QString fontName, int fon
                 || thisToken.back() == "date"
                 )
             {
-                text->append( streamReader.text().toString() );
+                text.append( streamReader.text().toString() );
                 break;
             }
             if(thisToken.back() == "a")
             {
-                text->append( streamReader.text().toString() );
+                text.append( streamReader.text().toString() );
                 break;
             }
             //все прочие тэги
             if( !streamReader.text().toString().isEmpty() )
             {
-                text->append("<span> " + streamReader.text().toString() + "</span>");
+                text.append("<span> " + streamReader.text().toString() + "</span>");
             }
             break;
         }
         }
     }
-
     return true;
 }

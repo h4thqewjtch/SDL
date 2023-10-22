@@ -9,7 +9,7 @@ class FB2Files : public QObject
     Q_OBJECT
 public:
     explicit FB2Files(QObject *parent = nullptr);
-    bool openFB2File(QFile&, QString*, QString, int);
+    bool openFB2File(QFile&, QString&, QString, int);
 
 signals:
 

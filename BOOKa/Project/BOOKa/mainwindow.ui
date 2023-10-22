@@ -19,7 +19,21 @@
      <layout class="QGridLayout" name="mainGrid">
       <item row="4" column="0" colspan="3">
        <layout class="QGridLayout" name="readGrid">
-        <item row="0" column="0">
+        <item row="1" column="0">
+         <widget class="QPushButton" name="btnBack">
+          <property name="text">
+           <string>Back</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QPushButton" name="btnNext">
+          <property name="text">
+           <string>Next</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0" colspan="2">
          <widget class="QTextBrowser" name="textBrowser">
           <property name="styleSheet">
            <string notr="true"/>
@@ -86,13 +100,6 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="0" colspan="2">
-       <widget class="QLabel" name="bookInfo">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
       <item row="2" column="0" colspan="3">
        <widget class="QLabel" name="label">
         <property name="text">
@@ -156,6 +163,23 @@
         </item>
        </widget>
       </item>
+      <item row="3" column="0" colspan="2">
+       <widget class="QWidget" name="widget" native="true">
+        <widget class="QLabel" name="bookInfo">
+         <property name="geometry">
+          <rect>
+           <x>8</x>
+           <y>0</y>
+           <width>661</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </widget>
+      </item>
      </layout>
     </item>
    </layout>
@@ -174,7 +198,7 @@
      <string>Options</string>
     </property>
     <addaction name="actionSelect_text"/>
-    <addaction name="actionAlready_Read"/>
+    <addaction name="actionRecent_Books"/>
     <addaction name="actionFavorites"/>
     <addaction name="actionBookMarks"/>
     <addaction name="actionInfo"/>
@@ -190,9 +214,9 @@
     <string>Ctrl+N</string>
    </property>
   </action>
-  <action name="actionAlready_Read">
+  <action name="actionRecent_Books">
    <property name="text">
-    <string>Already Read</string>
+    <string>Recent Books</string>
    </property>
   </action>
   <action name="actionFavorites">
