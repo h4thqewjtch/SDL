@@ -1,8 +1,8 @@
 #ifndef FB2FILES_H
 #define FB2FILES_H
 
-#include <QObject>
 #include <QFile>
+#include <QObject>
 
 class FB2Files : public QObject
 {

@@ -1,6 +1,5 @@
 #include "fb2files.h"
 
-#include <QFile>
 #include <QXmlStreamReader>
 
 FB2Files::FB2Files(QObject *parent) : QObject{parent}{}

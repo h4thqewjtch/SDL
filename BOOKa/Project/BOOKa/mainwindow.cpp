@@ -1,13 +1,17 @@
 #include "mainwindow.h"
+#include "listbookmarks.h"
+#include "listbooks.h"
 #include "ui_mainwindow.h"
 #include "fb2files.h"
 
+#include <QClipboard>
 #include <QFileDialog>
-#include <QTextEdit>
 #include <QFile>
 #include <QMessageBox>
+#include <QTextEdit>
 #include <QTextStream>
 #include <QXmlStreamReader>
+
 using namespace std;
 
 MainWindow::MainWindow(QWidget *parent)
@@ -48,13 +52,13 @@ void MainWindow::open_file()
                                           .append(QString::number(curPage))
                                           .append("/")
                                           .append(QString::number(pagesCount)));
+
                 //отображение страницы .fb2
                 show_fb2();
             }
         }
         else if(filePath.endsWith(".epub"))
         {
-
         }
         else if(filePath.endsWith(".txt"))
         {
@@ -73,9 +77,11 @@ void MainWindow::open_file()
             show_txt();
         }
         file.close();
-
     }
-    else{}
+    else
+    {
+        QMessageBox::critical(this, "ACCESS_ERROR","File is not opened");
+    }
 }
 
 void MainWindow::show_fb2()
@@ -123,9 +129,8 @@ void MainWindow::show_txt()
     ui->textBrowser->setText(page);
 }
 
-void MainWindow::on_actionSelect_text_triggered()
+void MainWindow::reset_settings()
 {
-    //Сброс настроек предыдущей книги
     filePath.clear();
     fileName.clear();
     text.clear();
@@ -133,25 +138,26 @@ void MainWindow::on_actionSelect_text_triggered()
     fontSize = 8;
     pagesCount = 0;
     curPage = 0;
-    charCount =4802;
-    //выбор новой книги
-    filePath = QFileDialog::getOpenFileName();
-    QFile file(filePath);
-    //получение имени книги
-    fileName = QFileInfo(file.fileName()).fileName();
-    //добавление в папку "Hедавние"
+    charCount =3430;
+}
+
+void MainWindow::add_to_recent()
+{
     QDir dir = QDir(filePath);
-    if(recentBooksPath.isEmpty())
+    if(!QDir(dir.homePath().append("/SDL/BOOKa/Project/RecentBooks")).exists())
     {
-        recentBooksPath = dir.homePath().append("/SDL/BOOKa/Project/RecentBooks");
-        QDir().mkdir(recentBooksPath);
+        QDir().mkdir(dir.homePath().append("/SDL/BOOKa/Project/RecentBooks"));
     }
-    if (QFile::exists(recentBooksPath.append("/").append(fileName)))
+    if (QFile::exists(dir.homePath().append("/SDL/BOOKa/Project/RecentBooks").append("/").append(fileName)))
     {
-        QFile::remove(recentBooksPath.append("/").append(fileName));
+        QFile::remove(dir.homePath().append("/SDL/BOOKa/Project/RecentBooks").append("/").append(fileName));
     }
-    QFile::copy(filePath, recentBooksPath);
-    //открытие файла с закладками для этой книги
+    QFile::copy(filePath, dir.homePath().append("/SDL/BOOKa/Project/RecentBooks").append("/").append(fileName));
+}
+
+void MainWindow::open_bookmarks()
+{
+    QDir dir = QDir(filePath);
     QFile bookMarks(dir.homePath().append("/SDL/BOOKa/Project/BookMarks").append("/").append(fileName).append(".txt"));
     if (bookMarks.open(QIODevice::ReadWrite | QIODevice::Text))
     {
@@ -166,20 +172,170 @@ void MainWindow::on_actionSelect_text_triggered()
         if(!line.isEmpty())
         {
             bool state;
-            QStringList info = line.split(" ");
+            QStringList info = line.split("|");
             qDebug() << info;
             // получение информации о прошлом чтении книги из закладки
             curPage = info[0].toLong(&state, 10);
             fontName = info[1];
             fontSize = info[2].toLong(&state, 10);
+            charCount = info[3].toLong(&state, 10);
+            ui->comboFonts->setCurrentText(fontName);
+            ui->comboSize->setCurrentText(QString::number(fontSize));
         }
         bookMarks.close();
     }
+}
+
+void MainWindow::on_actionSelect_text_triggered()
+{
+    //Сброс настроек предыдущей книги
+    reset_settings();
+    //выбор новой книги
+    filePath = QFileDialog::getOpenFileName();
+    QFile file(filePath);
+    //получение имени книги
+    fileName = QFileInfo(file.fileName()).fileName();
+    //добавление в папку "Hедавние"
+    add_to_recent();
+    //открытие файла с закладками для этой книги
+    open_bookmarks();
     open_file();
+}
+
+void MainWindow::on_actionRecent_Books_triggered()
+{
+    QStringList recBooksList;
+    QDir dir = QDir(filePath);
+    if(QDir(dir.homePath().append("/SDL/BOOKa/Project/RecentBooks")).exists())
+    {
+        dir = QDir(dir.homePath().append("/SDL/BOOKa/Project/RecentBooks"));
+        qDebug()<<dir.absolutePath();
+        qDebug()<<"exists\n";
+        foreach (QFileInfo info, dir.entryInfoList(QDir::Files, QDir::Name))
+        {
+            recBooksList.append(info.fileName());
+            qDebug()<<"info: "<<info.fileName()<<"\n";
+        }
+        listBooks recBooks;
+        recBooks.setBooksList(recBooksList);
+        recBooks.exec();
+        reset_settings();
+        QClipboard* pcb = QApplication::clipboard();
+        filePath = dir.homePath().append("/SDL/BOOKa/Project/RecentBooks/").append(pcb->text());
+        QFile file(filePath);
+        fileName = QFileInfo(file.fileName()).fileName();
+        open_bookmarks();
+        open_file();
+    }
+    else
+    {
+        QMessageBox::information(this, "ACCESS_ERROR","Recent books do not exist");
+    }
+
+}
+
+void MainWindow::on_actionFavorites_triggered()
+{
+    QStringList favorList;
+    QDir dir = QDir(filePath);
+    if(QDir(dir.homePath().append("/SDL/BOOKa/Project/Favorites")).exists())
+    {
+        dir = QDir(dir.homePath().append("/SDL/BOOKa/Project/Favorites"));
+        qDebug()<<dir.absolutePath();
+        foreach (QFileInfo info, dir.entryInfoList(QDir::Files, QDir::Name))
+        {
+            favorList.append(info.fileName());
+            //qDebug()<<"info: "<<info.fileName()<<"\n";
+        }
+        listBooks favorites;
+        favorites.setBooksList(favorList);
+        favorites.exec();
+        reset_settings();
+        QClipboard* pcb = QApplication::clipboard();
+        filePath = dir.homePath().append("/SDL/BOOKa/Project/Favorites/").append(pcb->text());
+        QFile file(filePath);
+        fileName = QFileInfo(file.fileName()).fileName();
+        open_bookmarks();
+        open_file();
+    }
+    else
+    {
+        QMessageBox::information(this, "ACCESS_ERROR","Favorite books do not exist");
+    }
+}
+
+void MainWindow::on_actionBookMarks_triggered()
+{
+    QStringList bookMarksList;
+    QDir dir = QDir(filePath);
+    if(QDir(dir.homePath().append("/SDL/BOOKa/Project/BookMarks")).exists())
+    {
+        dir = QDir(dir.homePath().append("/SDL/BOOKa/Project/BookMarks"));
+        qDebug()<<dir.absolutePath();
+        foreach (QFileInfo info, dir.entryInfoList(QDir::Files, QDir::Name))
+        {
+            bookMarksList.append(info.fileName());
+            //qDebug()<<"info: "<<info.fileName()<<"\n";
+        }
+        listBookMarks bookMarks;
+        bookMarks.setBookMarksList(bookMarksList);
+        bookMarks.exec();
+        reset_settings();
+        QClipboard* pcb = QApplication::clipboard();
+        filePath = dir.homePath().append("/SDL/BOOKa/Project/Favorites/").append(pcb->text());
+        QFile file(filePath);
+        fileName = QFileInfo(file.fileName()).fileName();
+        open_bookmarks();
+        open_file();
+    }
+    else
+    {
+        QMessageBox::information(this, "ACCESS_ERROR","Favorite books do not exist");
+    }
 }
 
 void MainWindow::on_actionInfo_triggered()
 {
+
+}
+
+void MainWindow::on_addToFavorites_clicked()
+{
+    QDir dir = QDir(filePath);
+    // создание папки с понравившимися книгами
+    if(!QDir(dir.homePath().append("/SDL/BOOKa/Project/Favorites")).exists())
+    {
+        QDir().mkdir(dir.homePath().append("/SDL/BOOKa/Project/Favorites"));
+    }
+    //добавление книги в Понравившиеся
+    if (QFile::exists(dir.homePath().append("/SDL/BOOKa/Project/Favorites/").append(fileName)))
+    {
+        QFile::remove(dir.homePath().append("/SDL/BOOKa/Project/Favorites/").append(fileName));
+    }
+    QFile::copy(filePath,dir.homePath().append("/SDL/BOOKa/Project/Favorites/").append(fileName));
+}
+
+void MainWindow::on_addBookmark_clicked()
+{
+    QDir dir = QDir(filePath);
+    // создание папки с закладками
+    if(!QDir(dir.homePath().append("/SDL/BOOKa/Project/BookMarks")).exists())
+    {
+        QDir().mkdir(dir.homePath().append("/SDL/BOOKa/Project/BookMarks"));
+    }
+    //добавление закладки(номер страницы, шрифт, размер текста) в отдельный файл для конкретной книги
+    QFile bookMarks(dir.homePath().append("/SDL/BOOKa/Project/BookMarks/").append(fileName).append(".txt"));
+    if (bookMarks.open(QIODevice::ReadWrite | QIODevice::Text))
+    {
+        bookMarks.seek(bookMarks.size());
+        QTextStream out(&bookMarks);
+        out << curPage << "|" << fontName << "|" << fontSize << "|" << charCount <<"\n";
+        bookMarks.close();
+    }
+    else
+    {
+        QMessageBox::warning(this, "ACCESS_ERROR","BookMark is not added");
+    }
 
 }
 
@@ -295,61 +451,6 @@ void MainWindow::on_comboSize_activated(int index)
     open_file();
 }
 
-void MainWindow::on_addToFavorites_clicked()
-{
-    QDir dir = QDir(filePath);
-    // создание папки с понравившимися книгами
-    if(favoritesPath.isEmpty())
-    {
-        favoritesPath = dir.homePath().append("/SDL/BOOKa/Project/Favorites");
-        QDir().mkdir(favoritesPath);
-    }
-    //добавление книги в Понравившиеся
-    if (QFile::exists(favoritesPath.append("/").append(fileName)))
-    {
-        QFile::remove(favoritesPath.append("/").append(fileName));
-    }
-    QFile::copy(filePath, favoritesPath);
-}
-
-void MainWindow::on_addBookmark_clicked()
-{
-    QDir dir = QDir(filePath);
-    // создание папки с закладками
-    if(bookMarksPath.isEmpty())
-    {
-        bookMarksPath = dir.homePath().append("/SDL/BOOKa/Project/BookMarks");
-        QDir().mkdir(bookMarksPath);
-    }
-    //добавление закладки(номер страницы, шрифт, размер текста) в отдельный файл для конкретной книги
-    QFile file(bookMarksPath.append("/").append(fileName).append(".txt"));
-    if (file.open(QIODevice::Append | QIODevice::Text))
-    {
-        QTextStream stream(&file);
-        stream << curPage << " " << fontName << " " << fontSize <<"\n";
-        file.close();
-    }
-    else
-    {
-        QMessageBox::critical(this, "","File is not opened");
-    }
-}
-
-void MainWindow::on_actionRecent_Books_triggered()
-{
-    QDir dir = QDir(filePath);
-    if(recentBooksPath.isEmpty())
-    {
-        recentBooksPath = dir.homePath().append("/SDL/BOOKa/Project/RecentBooks");
-        QDir().mkdir(recentBooksPath);
-    }
-    if (QFile::exists(recentBooksPath.append("/").append(fileName)))
-    {
-        QFile::remove(recentBooksPath.append("/").append(fileName));
-    }
-    QFile::copy(filePath, recentBooksPath);
-}
-
 void MainWindow::on_btnBack_clicked()
 {
     if(curPage>0)
@@ -367,3 +468,8 @@ void MainWindow::on_btnNext_clicked()
         open_file();
     }
 }
+
+
+
+
+

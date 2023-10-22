@@ -10,14 +10,20 @@ CONFIG += c++17
 
 SOURCES += \
     fb2files.cpp \
+    listbookmarks.cpp \
+    listbooks.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     fb2files.h \
+    listbookmarks.h \
+    listbooks.h \
     mainwindow.h
 
 FORMS += \
+    listbookmarks.ui \
+    listbooks.ui \
     mainwindow.ui
 
 # Default rules for deployment.
