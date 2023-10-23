@@ -23,6 +23,7 @@ private slots:
 
 private:
     Ui::listBooks *ui;
+    QClipboard *clipBoard;
 };
 
 #endif // LISTBOOKS_H
