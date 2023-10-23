@@ -19,11 +19,14 @@ void listBooks::setBooksList(QStringList list)
 {
     ui->listWidget->clear();
     ui->listWidget->addItems(list);
+//  создание объекта для взаимодействия с буфером обмена
+    clipBoard = QApplication::clipboard();
+    clipBoard->clear();
 }
 
 void listBooks::on_listWidget_itemDoubleClicked(QListWidgetItem *item)
 {
-    QClipboard* pcb = QApplication::clipboard(); //создание объекта для взаимодействия с буфером обмена
-    pcb->setText(item->text(), QClipboard::Clipboard); //копирование выбранного текста в буфер обмена
+//  копирование выбранного текста в буфер обмена
+    clipBoard->setText(item->text(), QClipboard::Clipboard);
 }
 

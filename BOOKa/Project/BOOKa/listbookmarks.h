@@ -16,14 +16,15 @@ public:
     explicit listBookMarks(QWidget *parent = nullptr);
     ~listBookMarks();
     void setBookMarksList(QStringList);
+    QStringList open_bookMarks(QString);
 
 private slots:
-
 
     void on_listWidget_itemDoubleClicked(QListWidgetItem *item);
 
 private:
     Ui::listBookMarks *ui;
+    QClipboard *clipBoard;
 };
 
 #endif // LISTBOOKMARKS_H

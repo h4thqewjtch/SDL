@@ -64,7 +64,7 @@ bool FB2Files::openFB2File(QFile &file, QString &text, QString fontName, int fon
             {
                 opt = " align=\"center\" style=\"font-size:" +QString::number(int(fontSize * 1.2)) + "px\" ";
             }
-            if(thisToken.contains("annotation") )
+            if(thisToken.contains("annotation"))
             {
                 opt = " align=\"left\" ";
             }

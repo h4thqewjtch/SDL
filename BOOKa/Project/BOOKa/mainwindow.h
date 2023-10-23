@@ -22,6 +22,7 @@ public:
     void reset_settings();
     void add_to_recent();
     void open_bookmarks();
+    void open_list(QString);
 
 private slots:
 
@@ -49,9 +50,6 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-//    QString favoritesPath;
-//    QString recentBooksPath;
-//    QString bookMarksPath = "";
     QString filePath, fileName;
     QString text;
     QString fontName = "Arial";;
