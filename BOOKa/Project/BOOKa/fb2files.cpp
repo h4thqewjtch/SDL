@@ -21,13 +21,13 @@ bool FB2Files::openFB2File(QFile &file, QString &text, QString fontName, int fon
         {
         case QXmlStreamReader::StartDocument:
         {
-            text.append("<!DOCTYPE HTML><html><body style=\"font-size:%1px; font-family:Sans, ").append(fontName).append(";\">");
-            text = text.arg(fontSize);
+            //text.append("<!DOCTYPE HTML><html><body style=\"font-size:%1px; font-family:Sans, ").append(fontName).append(";\">");
+            //text = text.arg(fontSize);
             break;
         }
         case QXmlStreamReader::EndDocument:
         {
-            text.append("</body></html>");
+            //text.append("</body></html>");
             break;
         }
         case QXmlStreamReader::StartElement:

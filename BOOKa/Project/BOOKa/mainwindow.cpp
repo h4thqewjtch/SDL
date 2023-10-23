@@ -102,10 +102,8 @@ void MainWindow::show_fb2()
     //вывод страницы в формате html
     QTextDocument document;
     document.setHtml(page);
-
-    QFont font(fontName, fontSize);
+    QFont font(fontName,fontSize);
     document.setDefaultFont(font);
-
     QString html = document.toHtml();
     ui->textBrowser->setHtml(html);
 }
